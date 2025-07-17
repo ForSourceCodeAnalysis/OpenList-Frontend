@@ -9,6 +9,7 @@ export enum ObjType {
 }
 
 export interface Obj {
+  id: string
   name: string
   size: number
   is_dir: boolean
@@ -25,6 +26,7 @@ export type StoreObj = Obj & {
 }
 
 export type RenameObj = {
+  id: string
   src_name: string
   new_name: string
 }
