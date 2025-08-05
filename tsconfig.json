@@ -3,16 +3,21 @@
     "strict": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client", "@hrgui/libass-wasm-ts"],
+    "types": [
+      "vite/client",
+      "@hrgui/libass-wasm-ts"
+    ],
     "noEmit": true,
     "isolatedModules": false,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": [
+        "./src/*"
+      ]
       // "@solidjs/router": ["./solid-router/src/index.tsx"]
     },
     "skipLibCheck": true,
