@@ -160,18 +160,18 @@ const theme: HopeThemeConfig = {
 }
 
 export const globalStyles = globalCss({
-  "*": {
-    margin: 0,
-    padding: 0,
-  },
-  html: {
-    fontFamily: `-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol" !important`,
-  },
-  "#root": {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
+  // "*": {
+  //   margin: 0,
+  //   padding: 0,
+  // },
+  // html: {
+  //   fontFamily: `-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol" !important`,
+  // },
+  // "#root": {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  // },
   ".hope-breadcrumb__list": {
     flexWrap: "wrap",
     rowGap: "0 !important",
