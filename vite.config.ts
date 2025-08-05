@@ -3,6 +3,7 @@ import { defineConfig } from "vite"
 import solidPlugin from "vite-plugin-solid"
 import legacy from "@vitejs/plugin-legacy"
 import { dynamicBase } from "vite-plugin-dynamic-base"
+import tailwindcss from "@tailwindcss/vite"
 import { viteStaticCopy } from "vite-plugin-static-copy"
 
 export default defineConfig({
@@ -15,6 +16,7 @@ export default defineConfig({
   },
   plugins: [
     solidPlugin(),
+    tailwindcss(),
     legacy({
       targets: ["defaults"],
     }),
