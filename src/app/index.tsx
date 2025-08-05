@@ -7,7 +7,7 @@ import { globalStyles, theme } from "./theme"
 const Index = () => {
   globalStyles()
   return (
-    <HopeProvider config={theme}>
+    <HopeProvider config={theme} enableCssReset={false}>
       <ErrorBoundary
         fallback={(err) => {
           console.error("error", err)
