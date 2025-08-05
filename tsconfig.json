@@ -17,7 +17,8 @@
     "paths": {
       "~/*": [
         "./src/*"
-      ]
+      ],
+       "@hope-ui/solid": ["./node_modules/@hope-ui/solid/dist/index.d.ts"],
       // "@solidjs/router": ["./solid-router/src/index.tsx"]
     },
     "skipLibCheck": true,
