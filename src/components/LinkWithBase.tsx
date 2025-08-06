@@ -1,5 +1,4 @@
 import { Link } from "@solidjs/router"
-import { Anchor } from "@hope-ui/solid"
 import { joinBase, encodePath } from "~/utils"
 import { useRouter } from "~/hooks"
 import { ComponentProps } from "solid-js"
@@ -14,11 +13,11 @@ export const LinkWithBase = (
 )
 
 export const AnchorWithBase = (
-  props: ComponentProps<typeof Anchor> & { cancelBase?: boolean },
+  props: ComponentProps<"a"> & { cancelBase?: boolean },
 ) => (
-  <Anchor
+  <a
     {...props}
-    href={props.cancelBase ? props.href : joinBase(props.href)}
+    href={props.cancelBase ? props.href : joinBase(props.href || "")}
   />
 )
 
