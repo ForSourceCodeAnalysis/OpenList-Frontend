@@ -1,13 +1,12 @@
-import { Progress, ProgressIndicator } from "@hope-ui/solid"
 import { Route, Routes, useIsRouting } from "@solidjs/router"
 import {
   Component,
+  Match,
+  Switch,
   createEffect,
   createSignal,
   lazy,
-  Match,
   onCleanup,
-  Switch,
 } from "solid-js"
 import { Portal } from "solid-js/web"
 import { Error, FullScreenLoading } from "~/components"
@@ -15,7 +14,7 @@ import { useLoading, useRouter, useT } from "~/hooks"
 import { setSettings } from "~/store"
 import { setArchiveExtensions } from "~/store/archive"
 import { Resp } from "~/types"
-import { base_path, bus, handleRespWithoutAuthAndNotify, r } from "~/utils"
+import { base_path, bus, cn, handleRespWithoutAuthAndNotify, r } from "~/utils"
 import { MustUser } from "./MustUser"
 import "./index.css"
 import { globalStyles } from "./theme"
@@ -65,18 +64,14 @@ const App: Component = () => {
   return (
     <>
       <Portal>
-        <Progress
-          indeterminate
-          size="xs"
-          position="fixed"
-          top="0"
-          left="0"
-          right="0"
-          zIndex="$banner"
-          d={isRouting() ? "block" : "none"}
-        >
-          <ProgressIndicator />
-        </Progress>
+        <progress
+          class={cn(
+            "progress fixed top-0 right-0 left-0 z-50 h-1 progress-primary",
+            {
+              hidden: !isRouting(),
+            },
+          )}
+        ></progress>
       </Portal>
       <Switch
         fallback={
