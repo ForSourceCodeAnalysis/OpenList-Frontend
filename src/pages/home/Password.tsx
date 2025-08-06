@@ -1,15 +1,5 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  Input,
-  Text,
-  useColorModeValue,
-  VStack,
-} from "@hope-ui/solid"
-import { useRouter, useT } from "~/hooks"
 import { JSXElement } from "solid-js"
+import { useRouter, useT } from "~/hooks"
 
 type PasswordProps = {
   title: string
@@ -23,47 +13,34 @@ const Password = (props: PasswordProps) => {
   const t = useT()
   const { back } = useRouter()
   return (
-    <VStack
-      w={{
-        "@initial": "$full",
-        "@md": "$lg",
-      }}
-      p="$8"
-      spacing="$3"
-      alignItems="start"
-    >
-      <Heading>{props.title}</Heading>
-      <Input
-        autofocus={true}
+    <div class="flex w-full flex-col items-start gap-3 p-8 md:w-lg">
+      <h2>{props.title}</h2>
+      <input
+        class="input w-full"
         type="password"
         value={props.password()}
-        background={useColorModeValue("$neutral3", "$neutral2")()}
+        autofocus
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             props.enterCallback()
           }
         }}
         onInput={(e) => props.setPassword(e.currentTarget.value)}
-      />
-      <HStack w="$full" justifyContent="space-between">
-        <Flex
-          fontSize="$sm"
-          color="$neutral10"
-          direction={{ "@initial": "column", "@sm": "row" }}
-          columnGap="$1"
-        >
+      ></input>
+      <div class="flex w-full flex-row items-center justify-between">
+        <div class="flex flex-col gap-1 text-sm sm:flex-row">
           {props.children}
-        </Flex>
-        <HStack spacing="$2">
-          <Button colorScheme="neutral" onClick={back}>
+        </div>
+        <div class="flex flex-row items-center gap-2">
+          <button class="btn" onClick={back}>
             {t("global.back")}
-          </Button>
-          <Button onClick={() => props.enterCallback()}>
+          </button>
+          <button class="btn btn-primary" onClick={() => props.enterCallback()}>
             {t("global.ok")}
-          </Button>
-        </HStack>
-      </HStack>
-    </VStack>
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }
 export default Password

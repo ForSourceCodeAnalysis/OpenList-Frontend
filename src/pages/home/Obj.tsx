@@ -1,4 +1,3 @@
-import { Text, useColorModeValue, VStack } from "@hope-ui/solid"
 import {
   createEffect,
   createMemo,
@@ -31,7 +30,6 @@ export { objBoxRef }
 
 export const Obj = () => {
   const t = useT()
-  const cardBg = useColorModeValue("white", "$neutral3")
   const { pathname, searchParams } = useRouter()
   const { handlePathChange, refresh } = usePath()
   const pagination = getPagination()
@@ -54,15 +52,9 @@ export const Obj = () => {
     }),
   )
   return (
-    <VStack
+    <div
       ref={(el: HTMLDivElement) => setObjBoxRef(el)}
-      class="obj-box"
-      w="$full"
-      rounded="$xl"
-      bgColor={cardBg()}
-      p="$2"
-      shadow="$lg"
-      spacing="$2"
+      class="obj-box flex w-full flex-col items-center space-y-2 rounded-xl bg-base-200 p-2 shadow-lg"
     >
       <Suspense fallback={<FullLoading />}>
         <Switch>
@@ -86,16 +78,15 @@ export const Obj = () => {
               setPassword={setPassword}
               enterCallback={() => refresh(true)}
             >
-              <Text>{t("global.have_account")}</Text>
-              <Text
-                color="$info9"
-                as={LinkWithBase}
+              <p>{t("global.have_account")}</p>
+              <LinkWithBase
+                class="link text-primary link-hover"
                 href={`/@login?redirect=${encodeURIComponent(
                   location.pathname,
                 )}`}
               >
                 {t("global.go_login")}
-              </Text>
+              </LinkWithBase>
             </Password>
           </Match>
           <Match
@@ -108,6 +99,6 @@ export const Obj = () => {
           </Match>
         </Switch>
       </Suspense>
-    </VStack>
+    </div>
   )
 }
