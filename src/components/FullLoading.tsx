@@ -1,5 +1,5 @@
 import { JSXElement, mergeProps, Show } from "solid-js"
-
+import { cn } from "~/utils"
 export const FullScreenLoading = () => {
   return (
     <div class="flex h-screen w-screen items-center justify-center">
@@ -34,10 +34,10 @@ export const FullLoading = (props: {
   return (
     <div
       ref={props.ref}
-      class={`flex h-full w-full items-center justify-center ${merged.py}`}
+      class={cn("flex h-full w-full items-center justify-center", merged.py)}
     >
       <span
-        class={`loading loading-spinner text-primary ${sizeClass}`}
+        class={cn("loading loading-spinner text-primary", sizeClass)}
         style={{ "--thickness": `${merged.thickness}px` }}
       />
     </div>
@@ -66,7 +66,7 @@ export const CenterLoading = (size?: "xs" | "sm" | "md" | "lg" | "xl") => {
 
   return (
     <div class="flex h-full w-full items-center justify-center">
-      <span class={`loading loading-spinner text-primary ${sizeClass}`} />
+      <span class={cn("loading loading-spinner text-primary", sizeClass)} />
     </div>
   )
 }
