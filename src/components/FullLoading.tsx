@@ -1,44 +1,46 @@
-import { Center, ElementType, Spinner, SpinnerProps } from "@hope-ui/solid"
 import { JSXElement, mergeProps, Show } from "solid-js"
-import { getMainColor } from "~/store"
+
 export const FullScreenLoading = () => {
   return (
-    <Center h="100vh">
-      <Spinner
-        thickness="4px"
-        speed="0.65s"
-        emptyColor="$neutral4"
-        color={getMainColor()}
-        size="xl"
-      />
-    </Center>
+    <div class="flex h-screen w-screen items-center justify-center">
+      <span class="loading loading-xl loading-spinner text-primary" />
+    </div>
   )
 }
 
 export const FullLoading = (props: {
   py?: string
-  size?: string
+  size?: "xs" | "sm" | "md" | "lg" | "xl"
   thickness?: number
   ref?: any
 }) => {
   const merged = mergeProps(
     {
-      py: "$8",
+      py: "py-8",
       size: "xl",
       thickness: 4,
     },
     props,
   )
+
+  const sizeClass = {
+    xs: "loading-xs",
+    sm: "loading-sm",
+    md: "loading-md",
+    lg: "loading-lg",
+    xl: "loading-xl",
+  }[merged.size || "xl"]
+
   return (
-    <Center ref={props.ref} h="$full" w="$full" py={merged.py}>
-      <Spinner
-        thickness={`${merged.thickness}px`}
-        speed="0.65s"
-        emptyColor="$neutral4"
-        color={getMainColor()}
-        size={merged.size as any}
+    <div
+      ref={props.ref}
+      class={`flex h-full w-full items-center justify-center ${merged.py}`}
+    >
+      <span
+        class={`loading loading-spinner text-primary ${sizeClass}`}
+        style={{ "--thickness": `${merged.thickness}px` }}
       />
-    </Center>
+    </div>
   )
 }
 
@@ -53,12 +55,18 @@ export const MaybeLoading = (props: {
   )
 }
 
-export const CenterLoading = <C extends ElementType = "div">(
-  props: SpinnerProps<C>,
-) => {
+export const CenterLoading = (size?: "xs" | "sm" | "md" | "lg" | "xl") => {
+  const sizeClass = {
+    xs: "loading-xs",
+    sm: "loading-sm",
+    md: "loading-md",
+    lg: "loading-lg",
+    xl: "loading-xl",
+  }[size || "md"]
+
   return (
-    <Center w="$full" h="$full">
-      <Spinner color={getMainColor()} {...props} />
-    </Center>
+    <div class="flex h-full w-full items-center justify-center">
+      <span class={`loading loading-spinner text-primary ${sizeClass}`} />
+    </div>
   )
 }
