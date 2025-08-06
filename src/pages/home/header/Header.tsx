@@ -33,9 +33,9 @@ export const Header = () => {
           </div>
           <div class="flex items-center gap-2">
             <Show when={objStore.state === State.Folder}>
-              <Show when={getSetting("search_index") !== "none" || true}>
+              <Show when={getSetting("search_index") !== "none"}>
                 <button
-                  class="btn input cursor-pointer"
+                  class="btn input cursor-pointer btn-sm"
                   onClick={() => {
                     bus.emit("tool", "search")
                   }}
