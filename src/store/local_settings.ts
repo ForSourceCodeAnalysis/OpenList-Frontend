@@ -46,7 +46,7 @@ export const initialLocalSettings = [
     key: "position_of_header_navbar",
     default: "static",
     type: "select",
-    options: ["static", "sticky", "only_navbar_sticky"],
+    options: ["static", "sticky"],
   },
   {
     key: "grid_item_size",

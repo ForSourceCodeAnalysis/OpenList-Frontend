@@ -5,6 +5,7 @@ import { Container } from "../Container"
 import { bus, cn } from "~/utils"
 import { Layout } from "./layout"
 import { isMac } from "~/utils/compatibility"
+import { BreadCrumbs } from "./BreadCrumbs"
 
 export const Header = () => {
   const logos = getSetting("logo").split("\n")
@@ -24,30 +25,33 @@ export const Header = () => {
   })
 
   return (
-    <div class={cn("header w-full bg-base-200", stickyClass())}>
-      <Container class="navbar">
-        <div class="flex-1">
-          <img class="btn btn-ghost" src={logo()!} alt="Logo" />
-        </div>
-        <div class="flex items-center gap-2">
-          <Show when={objStore.state === State.Folder}>
-            <Show when={getSetting("search_index") !== "none" || true}>
-              <button
-                class="btn input cursor-pointer"
-                onClick={() => {
-                  bus.emit("tool", "search")
-                }}
-              >
-                <BsSearch />
-                <div class="flex items-center gap-1">
-                  <kbd class="kbd kbd-xs">{isMac ? "⌘" : "Ctrl"}</kbd>+
-                  <kbd class="kbd kbd-xs">K</kbd>
-                </div>
-              </button>
+    <div class={cn("header w-full bg-base-200 pb-2 shadow-lg", stickyClass())}>
+      <Container>
+        <div class="navbar flex flex-row items-center justify-between">
+          <div class="flex-1">
+            <img class="btn btn-ghost" src={logo()!} alt="Logo" />
+          </div>
+          <div class="flex items-center gap-2">
+            <Show when={objStore.state === State.Folder}>
+              <Show when={getSetting("search_index") !== "none" || true}>
+                <button
+                  class="btn input cursor-pointer"
+                  onClick={() => {
+                    bus.emit("tool", "search")
+                  }}
+                >
+                  <BsSearch />
+                  <div class="flex items-center gap-1">
+                    <kbd class="kbd kbd-xs">{isMac ? "⌘" : "Ctrl"}</kbd>+
+                    <kbd class="kbd kbd-xs">K</kbd>
+                  </div>
+                </button>
+              </Show>
+              <Layout />
             </Show>
-            <Layout />
-          </Show>
+          </div>
         </div>
+        <BreadCrumbs />
       </Container>
     </div>
   )

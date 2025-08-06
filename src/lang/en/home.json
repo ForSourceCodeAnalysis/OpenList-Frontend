@@ -159,8 +159,7 @@
     "position_of_header_navbar": "Position of header & nav bar",
     "position_of_header_navbar_options": {
       "static": "Normal",
-      "sticky": "Stick to top of page",
-      "only_navbar_sticky": "Only nav bar sticky"
+      "sticky": "Stick to top of page"
     },
     "grid_item_size": "Grid item size",
     "show_sidebar": "Show sidebar",
