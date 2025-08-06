@@ -1,90 +1,54 @@
-import {
-  HStack,
-  useColorModeValue,
-  Image,
-  Center,
-  Icon,
-  Kbd,
-  CenterProps,
-} from "@hope-ui/solid"
-import { changeColor } from "seemly"
 import { Show, createMemo } from "solid-js"
-import { getMainColor, getSetting, local, objStore, State } from "~/store"
+import { getSetting, local, objStore, State } from "~/store"
 import { BsSearch } from "solid-icons/bs"
-import { CenterLoading } from "~/components"
 import { Container } from "../Container"
-import { bus } from "~/utils"
+import { bus, cn } from "~/utils"
 import { Layout } from "./layout"
 import { isMac } from "~/utils/compatibility"
 
 export const Header = () => {
   const logos = getSetting("logo").split("\n")
-  const logo = useColorModeValue(logos[0], logos.pop())
+  const logo = createMemo(() => {
+    // 使用daisyUI的颜色模式检测
+    const isDarkMode = document.documentElement.classList.contains("dark")
+    return isDarkMode ? logos.pop() : logos[0]
+  })
 
-  const stickyProps = createMemo<CenterProps>(() => {
+  const stickyClass = createMemo(() => {
     switch (local["position_of_header_navbar"]) {
       case "sticky":
-        return { position: "sticky", zIndex: "$sticky", top: 0 }
+        return "sticky top-0 z-50"
       default:
-        return { position: undefined, zIndex: undefined, top: undefined }
+        return ""
     }
   })
 
   return (
-    <Center
-      {...stickyProps}
-      bgColor="$background"
-      class="header"
-      w="$full"
-      // shadow="$md"
-    >
-      <Container>
-        <HStack
-          px="calc(2% + 0.5rem)"
-          py="$2"
-          w="$full"
-          justifyContent="space-between"
-        >
-          <HStack class="header-left" h="44px">
-            <Image
-              src={logo()!}
-              h="$full"
-              w="auto"
-              fallback={<CenterLoading />}
-            />
-          </HStack>
-          <HStack class="header-right" spacing="$2">
-            <Show when={objStore.state === State.Folder}>
-              <Show when={getSetting("search_index") !== "none"}>
-                <HStack
-                  bg="$neutral4"
-                  w="$32"
-                  p="$1"
-                  rounded="$md"
-                  justifyContent="space-between"
-                  border="2px solid transparent"
-                  cursor="pointer"
-                  color={getMainColor()}
-                  bgColor={changeColor(getMainColor(), { alpha: 0.15 })}
-                  _hover={{
-                    bgColor: changeColor(getMainColor(), { alpha: 0.2 }),
-                  }}
-                  onClick={() => {
-                    bus.emit("tool", "search")
-                  }}
-                >
-                  <Icon as={BsSearch} />
-                  <HStack>
-                    {isMac ? <Kbd>Cmd</Kbd> : <Kbd>Ctrl</Kbd>}
-                    <Kbd>K</Kbd>
-                  </HStack>
-                </HStack>
-              </Show>
-              <Layout />
+    <div class={cn("header w-full bg-base-200", stickyClass())}>
+      <Container class="navbar">
+        <div class="flex-1">
+          <img class="btn btn-ghost" src={logo()!} alt="Logo" />
+        </div>
+        <div class="flex items-center gap-2">
+          <Show when={objStore.state === State.Folder}>
+            <Show when={getSetting("search_index") !== "none" || true}>
+              <button
+                class="btn input cursor-pointer"
+                onClick={() => {
+                  bus.emit("tool", "search")
+                }}
+              >
+                <BsSearch />
+                <div class="flex items-center gap-1">
+                  <kbd class="kbd kbd-xs">{isMac ? "⌘" : "Ctrl"}</kbd>+
+                  <kbd class="kbd kbd-xs">K</kbd>
+                </div>
+              </button>
             </Show>
-          </HStack>
-        </HStack>
+            <Layout />
+          </Show>
+        </div>
       </Container>
-    </Center>
+    </div>
   )
 }
