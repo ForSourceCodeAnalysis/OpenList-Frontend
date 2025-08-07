@@ -7,13 +7,12 @@ function Html(props: { children?: string | ArrayBuffer }) {
   const [encoding, setEncoding] = createSignal<string>("utf-8")
   const { isString, text } = useParseText(props.children)
   return (
-    <BoxWithFullScreen w="$full" h="70vh" pos="relative">
-      <hope.iframe
-        w="$full"
-        h="$full"
-        rounded="$lg"
-        shadow="$md"
+    <BoxWithFullScreen>
+      <iframe
+        class="h-full w-full rounded-box"
         srcdoc={text(encoding())}
+        sandbox="allow-scripts allow-same-origin "
+        title="HTML Preview"
       />
       <Show when={!isString}>
         <EncodingSelect
