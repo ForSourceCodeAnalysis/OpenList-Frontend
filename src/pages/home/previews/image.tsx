@@ -1,8 +1,8 @@
+import { onCleanup, onMount } from "solid-js"
 import { Error, FullLoading, ImageWithError } from "~/components"
 import { useRouter, useT } from "~/hooks"
 import { objStore } from "~/store"
 import { ObjType } from "~/types"
-import { onCleanup, onMount } from "solid-js"
 
 const Preview = () => {
   const t = useT()
@@ -27,8 +27,7 @@ const Preview = () => {
   })
   return (
     <ImageWithError
-      maxH="75vh"
-      rounded="$lg"
+      class="max-h-[75vh] rounded-lg"
       src={objStore.raw_url}
       fallback={<FullLoading />}
       fallbackErr={<Error msg={t("home.preview.failed_load_img")} />}

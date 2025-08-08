@@ -1,10 +1,10 @@
-import { Center, VStack, Icon } from "@hope-ui/solid"
-import { Motion } from "solid-motionone"
+import { Center, Icon, VStack } from "@hope-ui/solid"
 import { useContextMenu } from "solid-contextmenu"
 import { batch, Show } from "solid-js"
+import { Motion } from "solid-motionone"
 import { CenterLoading, ImageWithError } from "~/components"
 import { useLink, usePath, useUtil } from "~/hooks"
-import { checkboxOpen, getMainColor, selectAll, selectIndex } from "~/store"
+import { checkboxOpen, getMainColor, selectIndex } from "~/store"
 import { ObjType, StoreObj } from "~/types"
 import { bus } from "~/utils"
 import { getIconByObj } from "~/utils/icon"
@@ -77,11 +77,7 @@ export const ImageItem = (props: { obj: StoreObj; index: number }) => {
             />
           </Show>
           <ImageWithError
-            h="150px"
-            w="$full"
-            objectFit="cover"
-            rounded="$lg"
-            shadow="$md"
+            class="h-[150px] w-full rounded-lg object-cover shadow-md"
             fallback={<CenterLoading size="lg" />}
             fallbackErr={objIcon}
             src={rawLink(props.obj)}

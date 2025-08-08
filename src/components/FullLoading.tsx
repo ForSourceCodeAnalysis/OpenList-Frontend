@@ -1,45 +1,51 @@
 import { JSXElement, mergeProps, Show } from "solid-js"
 import { cn } from "~/utils"
-export const FullScreenLoading = () => {
-  return (
-    <div class="flex h-screen w-screen items-center justify-center">
-      <span class="loading loading-xl loading-spinner text-primary" />
-    </div>
-  )
+
+type LoadingSize = "xs" | "sm" | "md" | "lg" | "xl"
+
+type LoadingProps = {
+  size?: LoadingSize
+  class?: string
 }
 
-export const FullLoading = (props: {
-  py?: string
-  size?: "xs" | "sm" | "md" | "lg" | "xl"
-  thickness?: number
-  ref?: any
-}) => {
-  const merged = mergeProps(
-    {
-      py: "py-8",
-      size: "xl",
-      thickness: 4,
-    },
-    props,
-  )
-
+export const Loading = (props: LoadingProps) => {
   const sizeClass = {
     xs: "loading-xs",
     sm: "loading-sm",
     md: "loading-md",
     lg: "loading-lg",
     xl: "loading-xl",
-  }[merged.size || "xl"]
+  }[props.size || "md"]
 
+  return (
+    <span
+      class={cn("loading loading-spinner text-primary", sizeClass, props.class)}
+    />
+  )
+}
+
+export const FullScreenLoading = () => {
+  return (
+    <div class="flex h-screen w-screen items-center justify-center">
+      <Loading size="xl" />
+    </div>
+  )
+}
+
+export const FullLoading = (props: {
+  py?: string
+  size?: LoadingSize
+  ref?: any
+}) => {
   return (
     <div
       ref={props.ref}
-      class={cn("flex h-full w-full items-center justify-center", merged.py)}
+      class={cn(
+        "flex h-full w-full items-center justify-center",
+        props.py ? `py${props.py.replaceAll("$", "")}` : "py-8",
+      )}
     >
-      <span
-        class={cn("loading loading-spinner text-primary", sizeClass)}
-        style={{ "--thickness": `${merged.thickness}px` }}
-      />
+      <Loading size={props.size} />
     </div>
   )
 }
@@ -55,18 +61,10 @@ export const MaybeLoading = (props: {
   )
 }
 
-export const CenterLoading = (size?: "xs" | "sm" | "md" | "lg" | "xl") => {
-  const sizeClass = {
-    xs: "loading-xs",
-    sm: "loading-sm",
-    md: "loading-md",
-    lg: "loading-lg",
-    xl: "loading-xl",
-  }[size || "md"]
-
+export const CenterLoading = (props: LoadingProps) => {
   return (
     <div class="flex h-full w-full items-center justify-center">
-      <span class={cn("loading loading-spinner text-primary", sizeClass)} />
+      <Loading {...props} />
     </div>
   )
 }

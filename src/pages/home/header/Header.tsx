@@ -1,11 +1,12 @@
-import { Show, createMemo } from "solid-js"
-import { getSetting, local, objStore, State } from "~/store"
 import { BsSearch } from "solid-icons/bs"
-import { Container } from "../Container"
+import { createMemo, Show } from "solid-js"
+import { ImageWithError, Loading } from "~/components"
+import { getSetting, local, objStore, State } from "~/store"
 import { bus, cn } from "~/utils"
-import { Layout } from "./layout"
 import { isMac } from "~/utils/compatibility"
+import { Container } from "../Container"
 import { BreadCrumbs } from "./BreadCrumbs"
+import { Layout } from "./layout"
 
 export const Header = () => {
   const logos = getSetting("logo").split("\n")
@@ -29,7 +30,13 @@ export const Header = () => {
       <Container>
         <div class="navbar flex flex-row items-center justify-between">
           <div class="flex-1">
-            <img class="btn btn-ghost" src={logo()!} alt="Logo" />
+            <ImageWithError
+              class="btn btn-ghost"
+              src={logo()!}
+              alt="Logo"
+              fallback={<Loading size="lg" />}
+              fallbackErr={<Loading size="lg" />}
+            />
           </div>
           <div class="flex items-center gap-2">
             <Show when={objStore.state === State.Folder}>

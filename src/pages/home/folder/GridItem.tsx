@@ -1,8 +1,8 @@
-import { Center, VStack, Icon, Text } from "@hope-ui/solid"
-import { Motion } from "solid-motionone"
+import { Center, Icon, Text, VStack } from "@hope-ui/solid"
 import { useContextMenu } from "solid-contextmenu"
 import { batch, Show } from "solid-js"
-import { CenterLoading, LinkWithPush, ImageWithError } from "~/components"
+import { Motion } from "solid-motionone"
+import { CenterLoading, ImageWithError, LinkWithPush } from "~/components"
 import { usePath, useRouter, useUtil } from "~/hooks"
 import { checkboxOpen, getMainColor, local, selectIndex } from "~/store"
 import { ObjType, StoreObj } from "~/types"
@@ -117,10 +117,7 @@ export const GridItem = (props: { obj: StoreObj; index: number }) => {
           </Show>
           <Show when={props.obj.thumb} fallback={objIcon}>
             <ImageWithError
-              maxH="$full"
-              maxW="$full"
-              rounded="$lg"
-              shadow="$md"
+              class="max-h-full max-w-full rounded-lg shadow-md"
               fallback={<CenterLoading size="lg" />}
               fallbackErr={objIcon}
               src={props.obj.thumb}
