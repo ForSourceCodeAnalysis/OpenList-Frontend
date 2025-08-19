@@ -9,6 +9,7 @@ import {
   RenameObj,
   ArchiveMeta,
   ArchiveList,
+  IDPath,
 } from "~/types"
 import { r } from "."
 
@@ -75,7 +76,15 @@ export const fsBatchRename = (
   src_dir: string,
   rename_objects: RenameObj[],
 ): PEmptyResp => {
-  return r.post("/fs/batch_rename", { src_dir, rename_objects })
+  return r.post(
+    "/fs/batch_rename",
+    { rename_objects },
+    {
+      headers: {
+        "File-Path": encodeURIComponent(src_dir),
+      },
+    },
+  )
 }
 
 export const fsMove = (
@@ -104,7 +113,7 @@ export const fsCopy = (
   return r.post("/fs/copy", { src_dir, dst_dir, names, overwrite })
 }
 
-export const fsRemove = (dir: string, names: string[]): PEmptyResp => {
+export const fsRemove = (dir: string, names: IDPath[]): PEmptyResp => {
   return r.post("/fs/remove", { dir, names })
 }
 

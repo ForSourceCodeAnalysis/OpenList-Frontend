@@ -25,6 +25,11 @@ export type StoreObj = Obj & {
   selected?: boolean
 }
 
+export type IDPath = {
+  id: string
+  path: string
+}
+
 export type RenameObj = {
   id: string
   src_name: string

@@ -54,7 +54,9 @@ export const Delete = () => {
             onClick={async () => {
               const resp = await ok(
                 pathname(),
-                selectedObjs().map((obj) => obj.name),
+                selectedObjs().map((obj) => {
+                  obj.id, obj.name
+                }),
               )
               handleRespWithNotifySuccess(resp, () => {
                 refresh()
