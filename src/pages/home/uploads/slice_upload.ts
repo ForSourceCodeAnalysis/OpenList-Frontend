@@ -1,6 +1,6 @@
 import { password } from "~/store"
 import { EmptyResp } from "~/types"
-import { r, pathDir, log } from "~/utils"
+import { r, pathDir } from "~/utils"
 import { SetUpload, Upload } from "./types"
 import pLimit from "p-limit"
 import {
@@ -11,13 +11,16 @@ import {
   FsSliceupComplete,
   HashType,
 } from "./util"
-import { sleep } from "seemly"
+import createMutex from "~/utils/mutex"
+
+const progressMutex = createMutex()
 
 export const sliceupload = async (
   uploadPath: string,
   file: File,
   setUpload: SetUpload,
   overwrite = false,
+  asTask = false,
 ): Promise<Error | undefined> => {
   let hashtype: string = HashType.Md5
   let slicehash: string[] = []
@@ -45,7 +48,14 @@ export const sliceupload = async (
   }
   const hash = await calculateHash(file, ht)
   // 预上传
-  const resp1 = await fsPreup(dir, file.name, file.size, hash, overwrite)
+  const resp1 = await fsPreup(
+    dir,
+    file.name,
+    file.size,
+    hash,
+    overwrite,
+    asTask,
+  )
   if (resp1.code != 200) {
     return new Error(resp1.message)
   }
@@ -59,7 +69,7 @@ export const sliceupload = async (
   if (resp.data.slice_hash_need) {
     slicehash = await calculateSliceHash(file, resp1.data.slice_size, hashtype)
   }
-  // 分片上传
+  // 分片上传状态
   sliceupstatus = base64ToUint8Array(resp1.data.slice_upload_status)
 
   // 进度和速度统计
@@ -67,6 +77,7 @@ export const sliceupload = async (
   let lastTimestamp = Date.now()
   let lastUploadedBytes = 0
   const totalSize = file.size
+  let completeFlag = false
 
   // 上传分片的核心函数，带进度和速度统计
   const uploadChunk = async (
@@ -90,33 +101,49 @@ export const sliceupload = async (
         "Content-Type": "multipart/form-data",
         Password: password(),
       },
-      onUploadProgress: (progressEvent) => {
-        if (progressEvent.lengthComputable) {
-          uploadedBytes += progressEvent.loaded - oldLoaded
+      onUploadProgress: async (progressEvent) => {
+        if (!progressEvent.lengthComputable) {
+          return
+        }
+        //获取锁
+        const release = await progressMutex.acquire()
+        try {
+          const sliceuploaded = progressEvent.loaded - oldLoaded
+          uploadedBytes += sliceuploaded
           oldLoaded = progressEvent.loaded
-          const complete = Math.min(
-            100,
-            ((uploadedBytes / totalSize) * 100) | 0,
-          )
-          setUpload("progress", complete)
-          const now = Date.now()
-          const duration = (now - lastTimestamp) / 1000
-          if (duration > 0.2) {
-            const speed = (uploadedBytes - lastUploadedBytes) / duration
-            setUpload("speed", speed)
-            lastTimestamp = now
-            lastUploadedBytes = uploadedBytes
-          }
+        } finally {
+          progressMutex.release()
         }
       },
     })
-    log("response", idx)
-    log(resp)
-    log("response end")
+
     if (resp.code != 200) {
       throw new Error(resp.message)
     }
   }
+
+  // 进度速度计算
+  let speedInterval = setInterval(() => {
+    if (completeFlag) {
+      clearInterval(speedInterval)
+      return
+    }
+
+    const intervalLoaded = uploadedBytes - lastUploadedBytes
+    if (intervalLoaded < 1000) {
+      //进度太小，不更新
+      return
+    }
+    const speed = intervalLoaded / ((Date.now() - lastTimestamp) / 1000)
+    const complete = Math.min(100, ((uploadedBytes / file.size) * 100) | 0)
+    setUpload("speed", speed)
+    setUpload("progress", complete)
+    lastTimestamp = Date.now()
+    lastUploadedBytes = uploadedBytes
+  }, 1000)
+
+  // 开始计时
+  lastTimestamp = Date.now()
 
   // 先上传第一个分片，slicehash全部用逗号拼接传递
   if (!isSliceUploaded(sliceupstatus, 0)) {
@@ -129,20 +156,18 @@ export const sliceupload = async (
         resp1.data.upload_id,
       )
     } catch (err) {
+      completeFlag = true
       setUpload("status", "error")
       setUpload("speed", 0)
       return err as Error
     }
-    setUpload(
-      "progress",
-      Math.min(100, ((uploadedBytes / totalSize) * 100) | 0),
-    )
   } else {
     uploadedBytes += Math.min(resp1.data.slice_size, totalSize)
   }
 
-  // 后续分片并发上传，限制并发数为3
+  // 后续分片并发上传，限制并发数为3，后续也可以通过fsUploadInfo接口获取配置
   const limit = pLimit(3)
+
   const tasks: Promise<void>[] = []
   const errors: Error[] = []
   for (let i = 1; i < resp1.data.slice_cnt; i++) {
@@ -176,27 +201,23 @@ export const sliceupload = async (
 
   // 最终处理上传结果
   if (errors.length > 0) {
-    setUpload("status", "error")
-    setUpload("speed", 0)
     setUpload(
       "progress",
       Math.min(100, ((uploadedBytes / totalSize) * 100) | 0),
     )
     return errors[0]
   } else {
+    if (!asTask) {
+      setUpload("status", "backending")
+    }
     const resp = await FsSliceupComplete(dir, resp1.data.upload_id)
+    completeFlag = true
     if (resp.code != 200) {
-      setUpload("status", "error")
       return new Error(resp.message)
     } else if (resp.data.complete == 0) {
-      setUpload("status", "error")
       return new Error("slice missing, please reupload")
-    } else if (resp.data.complete == 2) {
-      setUpload("status", "queued")
     }
-    setUpload("progress", 100)
-
-    setUpload("speed", 0)
+    //状态处理交给上层
     return
   }
 }

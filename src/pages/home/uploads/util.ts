@@ -2,7 +2,6 @@ import { HashInfo, UploadFileProps } from "./types"
 import { FsUpinfoResp, FsPreupResp, FsSliceupCompleteResp } from "~/types"
 import { createMD5, createSHA1, createSHA256 } from "hash-wasm"
 import { r } from "~/utils"
-import { Hash } from "crypto"
 
 export const traverseFileTree = async (entry: FileSystemEntry) => {
   let res: File[] = []
@@ -67,6 +66,7 @@ export const fsPreup = async (
   size: number,
   hash: HashInfo,
   overwrite: boolean,
+  as_task: boolean,
 ): Promise<FsPreupResp> => {
   return r.post(
     "/fs/preup",
@@ -76,6 +76,7 @@ export const fsPreup = async (
       size,
       hash,
       overwrite,
+      as_task,
     },
     {
       headers: {

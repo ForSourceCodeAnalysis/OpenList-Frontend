@@ -11,12 +11,11 @@ export const StreamUpload: Upload = async (
   asTask = false,
   overwrite = false,
   rapid = false,
-  sliceup = false, //是否分片上传
+  sliceup = false,
 ): Promise<Error | undefined> => {
   if (sliceup) {
-    return sliceupload(uploadPath, file, setUpload, overwrite)
+    return sliceupload(uploadPath, file, setUpload, overwrite, asTask)
   }
-
   let oldTimestamp = new Date().valueOf()
   let oldLoaded = 0
   let headers: { [k: string]: any } = {

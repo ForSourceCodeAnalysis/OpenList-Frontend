@@ -14,7 +14,7 @@ export const FormUpload: Upload = async (
   sliceup = false,
 ): Promise<Error | undefined> => {
   if (sliceup) {
-    return sliceupload(uploadPath, file, setUpload, overwrite)
+    return sliceupload(uploadPath, file, setUpload, overwrite, asTask)
   }
 
   let oldTimestamp = new Date().valueOf()

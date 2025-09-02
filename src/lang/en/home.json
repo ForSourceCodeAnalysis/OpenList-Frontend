@@ -81,6 +81,7 @@
       "incorrect_password": "Incorrect password",
       "extract_header": "Extract {{path}} to..."
     },
+    "share": "Share",
     "copy_link": "Copy link",
     "preview_page": "Preview page",
     "down_link": "Download link",
@@ -135,7 +136,7 @@
     "pending": "Pending",
     "uploading": "Uploading",
     "backending": "Uploading in the backend",
-    "queued": "In the Queue,Please check the queue",
+    "tasked": "Successfully added to the task",
     "success": "Success",
     "error": "Error",
     "back": "Back to Upload",
