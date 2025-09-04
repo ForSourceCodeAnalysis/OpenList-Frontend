@@ -169,19 +169,6 @@ export const side_menu_items: SideMenuItem[] = [
     to: "/@manage/users",
     component: lazy(() => import("./users/Users")),
   },
-  {
-    title: "manage.sidemenu.extensions",
-    icon: BiRegularExtension,
-    to: "/@manage/extensions",
-    children: [
-      {
-        title: "manage.sidemenu.auto_backup",
-        icon: BsCloudUploadFill,
-        to: "/@manage/extensions/auto_backup",
-        component: lazy(() => import("./extensions/autobackup/AutoBackup")),
-      },
-    ],
-  },
 
   {
     title: "manage.sidemenu.storages",
