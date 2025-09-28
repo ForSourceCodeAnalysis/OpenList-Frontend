@@ -4,8 +4,8 @@ set -e
 
 pnpm build
 
-rm -rf ../openlist/public/dist/assets
-rm -rf ../openlist/public/dist/images
-rm -rf ../openlist/public/dist/static
-rm -rf ../openlist/public/dist/streamer
-mv dist/* ../openlist/public/dist/
+rm -rf ../alist/public/dist/assets
+rm -rf ../alist/public/dist/images
+rm -rf ../alist/public/dist/static
+rm -rf ../alist/public/dist/streamer
+mv dist/* ../alist/public/dist/
