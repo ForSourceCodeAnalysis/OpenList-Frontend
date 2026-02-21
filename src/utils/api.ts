@@ -75,12 +75,19 @@ export const fsBatchRename = (
   src_dir: string,
   rename_objects: RenameObj[],
 ): PEmptyResp => {
+  return r.post("/fs/batch_rename", { src_dir, rename_objects })
+}
+
+export const fsExtBatchRename = (
+  src_dir: string,
+  rename_objects: RenameObj[],
+): PEmptyResp => {
   return r.post(
-    "/fs/batch_rename",
+    "/ext/fs/batch_rename",
     { rename_objects },
     {
       headers: {
-        "File-Path": encodeURIComponent(src_dir),
+        "Src-Dir": encodeURIComponent(src_dir),
       },
     },
   )
@@ -134,11 +141,11 @@ export const fsRemove = (dir: string, names: string[]): PEmptyResp => {
 
 export const fsBatchRemove = (dir: string, names: string[]): PEmptyResp => {
   return r.post(
-    "/fs/batch_remove",
+    "/ext/fs/batch_remove",
     { names },
     {
       headers: {
-        "File-Path": encodeURIComponent(dir),
+        "Src-Dir": encodeURIComponent(dir),
       },
     },
   )

@@ -17,7 +17,7 @@ import {
 import { useFetch, usePath, useRouter, useT } from "~/hooks"
 import {
   bus,
-  fsBatchRename,
+  fsExtBatchRename,
   handleRespWithNotifySuccess,
   notify,
   validateFilename,
@@ -34,7 +34,7 @@ export const BatchRename = () => {
     onClose: closePreviewModal,
   } = createDisclosure()
   const { isOpen, onOpen, onClose } = createDisclosure()
-  const [loading, ok] = useFetch(fsBatchRename)
+  const [loading, ok] = useFetch(fsExtBatchRename)
   const { pathname } = useRouter()
   const { refresh } = usePath()
   const [type, setType] = createSignal("1")
